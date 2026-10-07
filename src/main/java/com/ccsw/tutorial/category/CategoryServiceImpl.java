@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class CategoryServicelmpl implements CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
