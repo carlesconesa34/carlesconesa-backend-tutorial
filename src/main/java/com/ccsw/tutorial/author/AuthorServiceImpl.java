@@ -72,4 +72,13 @@ public class AuthorServiceImpl implements AuthorService {
         this.authorRepository.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Author> findAll() {
+
+        return (List<Author>) this.authorRepository.findAll();
+    }
+
 }

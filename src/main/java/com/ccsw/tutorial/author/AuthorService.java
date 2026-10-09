@@ -44,4 +44,11 @@ public interface AuthorService {
      */
     void delete(Long id) throws Exception;
 
+    /**
+     * Recupera un listado de autores {@link Author}
+     *
+     * @return {@link List} de {@link Author}
+     */
+    List<Author> findAll();
+
 }
