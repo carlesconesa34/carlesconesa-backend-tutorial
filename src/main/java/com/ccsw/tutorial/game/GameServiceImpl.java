@@ -1,5 +1,7 @@
 package com.ccsw.tutorial.game;
 
+import com.ccsw.tutorial.author.AuthorService;
+import com.ccsw.tutorial.category.CategoryService;
 import com.ccsw.tutorial.game.model.Game;
 import com.ccsw.tutorial.game.model.GameDto;
 import jakarta.transaction.Transactional;
@@ -20,6 +22,12 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     GameRepository gameRepository;
+
+    @Autowired
+    AuthorService authorService;
+
+    @Autowired
+    CategoryService categoryService;
 
     /**
      * {@inheritDoc}
@@ -45,6 +53,9 @@ public class GameServiceImpl implements GameService {
         }
 
         BeanUtils.copyProperties(dto, game, "id", "author", "category");
+
+        game.setAuthor(authorService.get(dto.getAuthor().getId()));
+        game.setCategory(categoryService.get(dto.getCategory().getId()));
 
         this.gameRepository.save(game);
     }
