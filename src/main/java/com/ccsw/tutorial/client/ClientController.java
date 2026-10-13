@@ -29,7 +29,7 @@ public class ClientController {
      *
      * @return {@link List} de {@link ClientDto}
      */
-    @Operation(summary = "Find", description = "Method that return a list of Clients")
+    @Operation(summary = "Find", description = "Method that returns a list of Clients")
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<ClientDto> findAll() {
 
