@@ -58,4 +58,16 @@ public class ClientController {
 
         client.setName(dto.getName());
     }
+
+    /**
+     * Método para borrar un cliente
+     *
+     * @param id PK de la entidad
+     */
+    @Operation(summary = "Delete", description = "Method that deletes a Client")
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") Long id) {
+
+        this.clients.remove(id);
+    }
 }
