@@ -9,6 +9,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -37,14 +38,14 @@ public class ClientIT {
         ResponseEntity<List<ClientDto>> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.GET, null, responseType);
 
         assertNotNull(response);
-        assertEquals(3, response.getBody().size());
+        assertEquals(6, response.getBody().size());
     }
 
     public static final Long NEW_CLIENT_ID = 7L;
     public static final String NEW_CLIENT_NAME = "CLI7";
 
     @Test
-    public void saveWithoutIdShouldCreateNewCategory() {
+    public void saveWithoutIdShouldCreateNewClient() {
 
         ClientDto dto = new ClientDto();
         dto.setName(NEW_CLIENT_NAME);
@@ -53,7 +54,7 @@ public class ClientIT {
 
         ResponseEntity<List<ClientDto>> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.GET, null, responseType);
         assertNotNull(response);
-        assertEquals(4, response.getBody().size());
+        assertEquals(7, response.getBody().size());
 
         ClientDto clientSearch = response.getBody().stream().filter(item -> item.getId().equals(NEW_CLIENT_ID)).findFirst().orElse(null);
         assertNotNull(clientSearch);
@@ -63,7 +64,7 @@ public class ClientIT {
     public static final Long MODIFY_CLIENT_ID = 6L;
 
     @Test
-    public void modifyWithExistIdShouldModifyCategory() {
+    public void modifyWithExistIdShouldModifyClient() {
 
         ClientDto dto = new ClientDto();
         dto.setName(NEW_CLIENT_NAME);
@@ -72,7 +73,7 @@ public class ClientIT {
 
         ResponseEntity<List<ClientDto>> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.GET, null, responseType);
         assertNotNull(response);
-        assertEquals(3, response.getBody().size());
+        assertEquals(6, response.getBody().size());
 
         ClientDto clientSearch = response.getBody().stream().filter(item -> item.getId().equals(MODIFY_CLIENT_ID)).findFirst().orElse(null);
         assertNotNull(clientSearch);
