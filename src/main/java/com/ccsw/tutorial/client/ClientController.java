@@ -2,15 +2,15 @@ package com.ccsw.tutorial.client;
 
 import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.client.model.ClientDto;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import java.util.List;
+import java.util.stream.Collectors;
 /**
  * @author ccsw
  *
@@ -21,8 +21,11 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class ClientController {
 
-    private long SEQUENCE = 1;
-    private Map<Long, ClientDto> clients = new HashMap<Long, ClientDto>();
+    @Autowired
+    ClientService clientService;
+
+    @Autowired
+    ModelMapper mapper;
 
     /**
      * Método para recuperar todos los clientes
@@ -32,8 +35,9 @@ public class ClientController {
     @Operation(summary = "Find", description = "Method that returns a list of Clients")
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<ClientDto> findAll() {
+        List<Client> clients = this.clientService.findAll();
 
-        return new ArrayList<ClientDto>(this.clients.values());
+        return clients.stream().map(e -> mapper.map(e, ClientDto.class)).collect(Collectors.toList());
     }
 
     /**
@@ -46,17 +50,7 @@ public class ClientController {
     @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
     public void save(@PathVariable(name = "id", required = false) Long id, @RequestBody ClientDto dto) {
 
-        ClientDto client;
-
-        if (id == null) {
-            client = new ClientDto();
-            client.setId(this.SEQUENCE++);
-            this.clients.put(client.getId(), client);
-        } else {
-            client = this.clients.get(id);
-        }
-
-        client.setName(dto.getName());
+        this.clientService.save(id, dto);
     }
 
     /**
@@ -66,8 +60,7 @@ public class ClientController {
      */
     @Operation(summary = "Delete", description = "Method that deletes a Client")
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("id") Long id) {
-
-        this.clients.remove(id);
+    public void delete(@PathVariable("id") Long id) throws Exception {
+        this.clientService.delete(id);
     }
 }
