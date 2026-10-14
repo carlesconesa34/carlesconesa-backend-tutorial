@@ -30,6 +30,12 @@ public class ClientServiceImpl implements ClientService {
      * {@inheritDoc}
      */
     public void save(Long id, ClientDto dto) {
+
+        Client existingClient = this.clientRepository.findClientByName(dto.getName());
+
+        if (existingClient != null && (id == null || !existingClient.getId().equals(id))) {
+            throw new RuntimeException("El cliente " + dto.getName() + " ya existe.");
+        }
         Client client;
 
         if (id == null) {
