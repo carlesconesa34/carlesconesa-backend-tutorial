@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 public class LoanDto {
 
-    public Long getClient;
     private Long id;
     private LocalDate startDate;
     private LocalDate endDate;
