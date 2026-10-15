@@ -40,24 +40,7 @@ public class LoanController {
         Page<Loan> page = this.loanService.findPage(dto);
 
         return new PageImpl<>(
-                page.getContent().stream().map(e -> {
-
-                    LoanDto loanDto = new LoanDto();
-
-                    loanDto.setId(e.getId());
-
-                    loanDto.setClientId(e.getClient().getId());
-                    loanDto.setClientName(e.getClient().getName());
-
-                    loanDto.setGameId(e.getGame().getId());
-                    loanDto.setGameName(e.getGame().getTitle());
-
-                    loanDto.setStartDate(e.getStartDate());
-                    loanDto.setEndDate(e.getEndDate());
-
-                    return loanDto;
-
-                }).collect(Collectors.toList()),
+                page.getContent().stream().map(e -> this.mapper.map(e, LoanDto.class)).collect(Collectors.toList()),
                 page.getPageable(),
                 page.getTotalElements()
         );
@@ -99,20 +82,6 @@ public class LoanController {
 
         List<Loan> Loans = this.loanService.findAll();
 
-        return Loans.stream().map(e -> {
-            LoanDto dto = new LoanDto();
-
-            dto.setId(e.getId());
-
-            dto.setClientId(e.getClient().getId());
-            dto.setClientName(e.getClient().getName());
-
-            dto.setGameId(e.getGame().getId());
-            dto.setGameName(e.getGame().getTitle());
-
-            dto.setStartDate(e.getStartDate());
-            dto.setEndDate(e.getEndDate());
-
-            return dto;}).collect(Collectors.toList());
+        return Loans.stream().map(e -> this.mapper.map(e, LoanDto.class)).collect(Collectors.toList());
     }
 }
