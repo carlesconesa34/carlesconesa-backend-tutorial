@@ -8,7 +8,7 @@ public class LoanSearchDto {
 
     private Long gameId;
     private Long clientId;
-    private LocalDate searchDate;
+    LocalDate date;
 
     private PageableRequest pageable;
 
@@ -24,17 +24,19 @@ public class LoanSearchDto {
 
     public void setClientId(Long clientId) { this.clientId = clientId; }
 
-    public LocalDate getSearchDate () {
-        return searchDate;
-    }
-
-    public void setSearchDate(LocalDate searchDate) { this.searchDate = searchDate; }
-
     public PageableRequest getPageable() {
         return pageable;
     }
 
     public void setPageable(PageableRequest pageable) {
         this.pageable = pageable;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }
