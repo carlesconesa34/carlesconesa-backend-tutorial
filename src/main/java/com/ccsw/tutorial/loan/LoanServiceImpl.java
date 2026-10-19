@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -42,40 +43,11 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public Page<Loan> findPage(LoanSearchDto dto) {
 
-        Specification<Loan> specification = Specification.allOf();
+        Specification<Loan> specification = LoanSpecification.search(dto.getGameId(), dto.getClientId(), dto.getDate());
 
-        if (dto.getGameId() != null) {
-            specification = specification.and(
-                    (root, query, cb) ->
-                            cb.equal(root.get("game").get("id"), dto.getGameId())
-            );
-        }
+        Pageable pageable = dto.getPageable().getPageable();
 
-        if (dto.getClientId() != null) {
-            specification = specification.and(
-                    (root, query, cb) ->
-                            cb.equal(root.get("client").get("id"), dto.getClientId())
-            );
-        }
-
-        if (dto.getSearchDate() != null) {
-
-            specification = specification.and(
-                    (root, query, cb) ->
-                            cb.and(
-                                    cb.lessThanOrEqualTo(
-                                            root.get("startDate"),
-                                            dto.getSearchDate()
-                                    ),
-                                    cb.greaterThanOrEqualTo(
-                                            root.get("endDate"),
-                                            dto.getSearchDate()
-                                    )
-                            )
-            );
-        }
-
-        return loanRepository.findAll(specification,dto.getPageable().getPageable());
+        return this.loanRepository.findAll(specification, pageable);
     }
 
     /**
