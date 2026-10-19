@@ -16,12 +16,12 @@ INSERT INTO game(title, age, category_id, author_id) VALUES ('Barrage', '14', 1,
 INSERT INTO game(title, age, category_id, author_id) VALUES ('Los viajes de Marco Polo', '12', 1, 3);
 INSERT INTO game(title, age, category_id, author_id) VALUES ('Azul', '8', 3, 5);
 
-INSERT INTO client(name) VALUES ('Carles Conesa');
-INSERT INTO client(name) VALUES ('Daniel Golobart');
-INSERT INTO client(name) VALUES ('Elvin Isaí Portillo');
-INSERT INTO client(name) VALUES ('Stephany Olaes');
-INSERT INTO client(name) VALUES ('Àlex López');
-INSERT INTO client(name) VALUES ('Xavi Hurtado');
+INSERT INTO client(name) VALUES ('CLIENT1');
+INSERT INTO client(name) VALUES ('CLIENT2');
+INSERT INTO client(name) VALUES ('CLIENT3');
+INSERT INTO client(name) VALUES ('CLIENT4');
+INSERT INTO client(name) VALUES ('CLIENT5');
+INSERT INTO client(name) VALUES ('CLIENT6');
 
 INSERT INTO loan(client_id, game_id, start_date, end_date) VALUES (1, 1, '2026-01-01', '2026-01-05');
 INSERT INTO loan(client_id, game_id, start_date, end_date) VALUES (1, 2, '2026-01-06', '2026-01-10');
