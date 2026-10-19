@@ -1,7 +1,10 @@
 package com.ccsw.tutorial.loan;
 
 import com.ccsw.tutorial.client.ClientRepository;
+import com.ccsw.tutorial.common.criteria.SearchCriteria;
 import com.ccsw.tutorial.game.GameRepository;
+import com.ccsw.tutorial.game.GameSpecification;
+import com.ccsw.tutorial.game.model.Game;
 import com.ccsw.tutorial.loan.LoanRepository;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
@@ -43,11 +46,14 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public Page<Loan> findPage(LoanSearchDto dto) {
 
-        Specification<Loan> specification = LoanSpecification.search(dto.getGameId(), dto.getClientId(), dto.getDate());
+        LoanSpecification gameSpec = new LoanSpecification(new SearchCriteria("game.id", ":", dto.getGameId()));
+        LoanSpecification clientSpec = new LoanSpecification(new SearchCriteria("client.id", ":", dto.getClientId()));
+
+        Specification<Loan> spec = Specification.where(gameSpec).and(clientSpec);
 
         Pageable pageable = dto.getPageable().getPageable();
 
-        return this.loanRepository.findAll(specification, pageable);
+        return this.loanRepository.findAll(spec, pageable);
     }
 
     /**
