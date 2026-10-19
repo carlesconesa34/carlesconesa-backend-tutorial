@@ -54,7 +54,7 @@ public class LoanServiceImpl implements LoanService {
      * {@inheritDoc}
      */
     @Override
-    public void save(Long id, LoanDto data) {
+    public void save(Long id, LoanDto dto) {
 
         Loan loan;
 
@@ -64,10 +64,12 @@ public class LoanServiceImpl implements LoanService {
             loan = this.get(id);
         }
 
-        long days = ChronoUnit.DAYS.between(data.getStartDate(), data.getEndDate());
-        LocalDate day = data.getStartDate();
+        BeanUtils.copyProperties(dto, loan, "id", "game", "client");
 
-        if (data.getEndDate().isBefore(data.getStartDate())) {
+        long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate());
+        LocalDate day = dto.getStartDate();
+
+        if (dto.getEndDate().isBefore(dto.getStartDate())) {
             throw new RuntimeException("End date cannot be before start date");
         }
 
@@ -75,22 +77,22 @@ public class LoanServiceImpl implements LoanService {
             throw new RuntimeException("Loan cannot exceed 14 days");
         }
 
-        List<Loan> gameLoans = loanRepository.findByGameId(data.getGame().getId());
+        List<Loan> gameLoans = loanRepository.findByGameId(dto.getGame().getId());
         for (Loan existing : gameLoans) {
 
             if (id != null && existing.getId().equals(id)) {
                 continue;
             }
 
-            boolean overlap = !data.getEndDate().isBefore(existing.getStartDate()) && !data.getStartDate().isAfter(existing.getEndDate());
+            boolean overlap = !dto.getEndDate().isBefore(existing.getStartDate()) && !dto.getStartDate().isAfter(existing.getEndDate());
 
             if (overlap) {
                 throw new RuntimeException("Game already loaned");
             }
         }
 
-        List<Loan> clientLoans = loanRepository.findByClientId(data.getClient().getId());
-        while (!day.isAfter(data.getEndDate())) {
+        List<Loan> clientLoans = loanRepository.findByClientId(dto.getClient().getId());
+        while (!day.isAfter(dto.getEndDate())) {
 
             int activeLoans = 0;
 
@@ -114,11 +116,11 @@ public class LoanServiceImpl implements LoanService {
             day = day.plusDays(1);
         }
 
-        loan.setClient(clientRepository.findById(data.getClient().getId()).orElseThrow());
-        loan.setGame(gameRepository.findById(data.getGame().getId()).orElseThrow());
+        loan.setClient(clientRepository.findById(dto.getClient().getId()).orElseThrow());
+        loan.setGame(gameRepository.findById(dto.getGame().getId()).orElseThrow());
 
-        loan.setStartDate(data.getStartDate());
-        loan.setEndDate(data.getEndDate());
+        loan.setStartDate(dto.getStartDate());
+        loan.setEndDate(dto.getEndDate());
 
         this.loanRepository.save(loan);
     }
