@@ -26,9 +26,9 @@ public class LoanSpecification {
 
             if (date != null) {
 
-                predicates.add(builder.lessThanOrEqualTo(root.get("dateini"), date));
+                predicates.add(builder.lessThanOrEqualTo(root.get("startDate"), date));
 
-                predicates.add(builder.greaterThanOrEqualTo(root.get("datefin"), date));
+                predicates.add(builder.greaterThanOrEqualTo(root.get("endDate"), date));
             }
 
             return builder.and(predicates.toArray(new Predicate[0]));
