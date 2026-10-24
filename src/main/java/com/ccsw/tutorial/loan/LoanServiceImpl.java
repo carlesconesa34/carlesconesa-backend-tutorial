@@ -1,11 +1,8 @@
 package com.ccsw.tutorial.loan;
 
-import com.ccsw.tutorial.client.ClientRepository;
+import com.ccsw.tutorial.customer.CustomerRepository;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
 import com.ccsw.tutorial.game.GameRepository;
-import com.ccsw.tutorial.game.GameSpecification;
-import com.ccsw.tutorial.game.model.Game;
-import com.ccsw.tutorial.loan.LoanRepository;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import com.ccsw.tutorial.loan.model.LoanSearchDto;
@@ -29,7 +26,7 @@ public class LoanServiceImpl implements LoanService {
     LoanRepository loanRepository;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     private GameRepository gameRepository;
@@ -47,7 +44,7 @@ public class LoanServiceImpl implements LoanService {
     public Page<Loan> findPage(LoanSearchDto dto) {
 
         LoanSpecification gameSpec = new LoanSpecification(new SearchCriteria("game.id", ":", dto.getGameId()));
-        LoanSpecification clientSpec = new LoanSpecification(new SearchCriteria("client.id", ":", dto.getClientId()));
+        LoanSpecification clientSpec = new LoanSpecification(new SearchCriteria("customer.id", ":", dto.getCustomerId()));
 
         Specification<Loan> spec = Specification.where(gameSpec).and(clientSpec);
 
@@ -70,7 +67,7 @@ public class LoanServiceImpl implements LoanService {
             loan = this.get(id);
         }
 
-        BeanUtils.copyProperties(dto, loan, "id", "game", "client");
+        BeanUtils.copyProperties(dto, loan, "id", "game", "customer");
 
         long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate());
         LocalDate day = dto.getStartDate();
@@ -97,12 +94,12 @@ public class LoanServiceImpl implements LoanService {
             }
         }
 
-        List<Loan> clientLoans = loanRepository.findByClientId(dto.getClient().getId());
+        List<Loan> customerLoans = loanRepository.findByCustomerId(dto.getCustomer().getId());
         while (!day.isAfter(dto.getEndDate())) {
 
             int activeLoans = 0;
 
-            for (Loan existing : clientLoans) {
+            for (Loan existing : customerLoans) {
 
                 if (id != null && existing.getId().equals(id)) {
                     continue;
@@ -116,13 +113,13 @@ public class LoanServiceImpl implements LoanService {
             }
 
             if (activeLoans >= 2) {
-                throw new RuntimeException("Client cannot have more than 2 simultaneous loans");
+                throw new RuntimeException("Customer cannot have more than 2 simultaneous loans");
             }
 
             day = day.plusDays(1);
         }
 
-        loan.setClient(clientRepository.findById(dto.getClient().getId()).orElseThrow());
+        loan.setCustomer(customerRepository.findById(dto.getCustomer().getId()).orElseThrow());
         loan.setGame(gameRepository.findById(dto.getGame().getId()).orElseThrow());
 
         loan.setStartDate(dto.getStartDate());

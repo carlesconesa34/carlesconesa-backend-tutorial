@@ -28,7 +28,7 @@ public interface LoanRepository extends CrudRepository<Loan, Long>, JpaSpecifica
     /**
      * Método para buscar un Clients por su Id de {@link Loan}
      *
-     * @param clientId Long
+     * @param customerId Long
      */
-    List<Loan> findByClientId(Long clientId);
+    List<Loan> findByCustomerId(Long customerId);
 }

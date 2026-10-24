@@ -1,6 +1,6 @@
 package com.ccsw.tutorial.loan.model;
 
-import com.ccsw.tutorial.client.model.Client;
+import com.ccsw.tutorial.customer.model.Customer;
 import com.ccsw.tutorial.game.model.Game;
 import jakarta.persistence.*;
 
@@ -15,8 +15,8 @@ public class Loan {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "game_id", nullable = false)
@@ -45,23 +45,23 @@ public class Loan {
     }
 
     /**
-     * @return client
+     * @return customer
      */
-    public Client getClient() {
+    public Customer getCustomer() {
 
-        return client;
+        return customer;
     }
 
     /**
-     * @param client new value of {@link #getClient()}.
+     * @param client new value of {@link #getCustomer()}.
      */
-    public void setClient(Client client) {
+    public void setCustomer(Customer client) {
 
-        this.client = client;
+        this.customer = client;
     }
 
     /**
-     * @return client
+     * @return customer
      */
     public Game getGame() {
 

@@ -1,13 +1,21 @@
-package com.ccsw.tutorial.client.model;
+package com.ccsw.tutorial.customer.model;
+
+import jakarta.persistence.*;
 
 /**
  * @author ccsw
  *
  */
-public class ClientDto {
+@Entity
+@Table(name = "customer")
+public class Customer {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
     /**

@@ -1,8 +1,7 @@
 package com.ccsw.tutorial.loan.model;
 
-import com.ccsw.tutorial.client.model.ClientDto;
+import com.ccsw.tutorial.customer.model.CustomerDto;
 import com.ccsw.tutorial.game.model.GameDto;
-import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -12,7 +11,7 @@ public class LoanDto {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private ClientDto client;
+    private CustomerDto customer;
     private GameDto game;
 
     /**
@@ -64,19 +63,19 @@ public class LoanDto {
     }
 
     /**
-     * @return client
+     * @return customer
      */
-    public ClientDto getClient() {
+    public CustomerDto getCustomer() {
 
-        return this.client;
+        return this.customer;
     }
 
     /**
-     * @param client new value of {@link #getClient()}.
+     * @param client new value of {@link #getCustomer()}.
      */
-    public void setClient(ClientDto client) {
+    public void setCustomer(CustomerDto client) {
 
-        this.client = client;
+        this.customer = client;
     }
 
     public GameDto getGame() {

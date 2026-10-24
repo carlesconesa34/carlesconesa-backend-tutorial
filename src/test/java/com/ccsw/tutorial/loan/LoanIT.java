@@ -1,6 +1,6 @@
 package com.ccsw.tutorial.loan;
 
-import com.ccsw.tutorial.client.model.ClientDto;
+import com.ccsw.tutorial.customer.model.CustomerDto;
 import com.ccsw.tutorial.common.pagination.PageableRequest;
 import com.ccsw.tutorial.config.ResponsePage;
 import com.ccsw.tutorial.game.model.GameDto;
@@ -76,9 +76,9 @@ public class LoanIT {
         long newLoanSize = TOTAL_LOANS + 1;
 
         LoanDto dto = new LoanDto();
-        ClientDto clientDto = new ClientDto();
-        clientDto.setId(1L);
-        dto.setClient(clientDto);
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setId(1L);
+        dto.setCustomer(customerDto);
         GameDto gameDto = new GameDto();
         gameDto.setId(6L);
         dto.setGame(gameDto);
@@ -100,9 +100,9 @@ public class LoanIT {
     public void modifyWithExistIdShouldModifyLoan() {
 
         LoanDto dto = new LoanDto();
-        ClientDto clientDto = new ClientDto();
-        clientDto.setId(1L);
-        dto.setClient(clientDto);
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setId(1L);
+        dto.setCustomer(customerDto);
         GameDto gameDto = new GameDto();
         gameDto.setId(6L);
         dto.setGame(gameDto);
@@ -130,9 +130,9 @@ public class LoanIT {
         long loanId = TOTAL_LOANS + 1;
 
         LoanDto dto = new LoanDto();
-        ClientDto clientDto = new ClientDto();
-        clientDto.setId(1L);
-        dto.setClient(clientDto);
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setId(1L);
+        dto.setCustomer(customerDto);
         GameDto gameDto = new GameDto();
         gameDto.setId(6L);
         dto.setGame(gameDto);

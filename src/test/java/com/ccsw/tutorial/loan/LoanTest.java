@@ -1,6 +1,6 @@
 package com.ccsw.tutorial.loan;
 
-import com.ccsw.tutorial.client.ClientRepository;
+import com.ccsw.tutorial.customer.CustomerRepository;
 import com.ccsw.tutorial.game.GameRepository;
 import com.ccsw.tutorial.loan.model.Loan;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class LoanTest {
     private LoanRepository loanRepository;
 
     @Mock
-    private ClientRepository clientRepository;
+    private CustomerRepository customerRepository;
 
     @Mock
     private GameRepository gameRepository;

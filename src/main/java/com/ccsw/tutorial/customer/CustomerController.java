@@ -1,7 +1,7 @@
-package com.ccsw.tutorial.client;
+package com.ccsw.tutorial.customer;
 
-import com.ccsw.tutorial.client.model.Client;
-import com.ccsw.tutorial.client.model.ClientDto;
+import com.ccsw.tutorial.customer.model.Customer;
+import com.ccsw.tutorial.customer.model.CustomerDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
  * @author ccsw
  *
  */
-@Tag(name = "Client", description = "API of Client")
+@Tag(name = "Customer", description = "API of Customer")
 @RequestMapping(value = "/client")
 @RestController
 @CrossOrigin(origins = "*")
-public class ClientController {
+public class CustomerController {
 
     @Autowired
-    ClientService clientService;
+    CustomerService customerService;
 
     @Autowired
     ModelMapper mapper;
@@ -30,14 +30,14 @@ public class ClientController {
     /**
      * Método para recuperar todos los clientes
      *
-     * @return {@link List} de {@link ClientDto}
+     * @return {@link List} de {@link CustomerDto}
      */
     @Operation(summary = "Find", description = "Method that returns a list of Clients")
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<ClientDto> findAll() {
-        List<Client> clients = this.clientService.findAll();
+    public List<CustomerDto> findAll() {
+        List<Customer> clients = this.customerService.findAll();
 
-        return clients.stream().map(e -> mapper.map(e, ClientDto.class)).collect(Collectors.toList());
+        return clients.stream().map(e -> mapper.map(e, CustomerDto.class)).collect(Collectors.toList());
     }
 
     /**
@@ -46,11 +46,11 @@ public class ClientController {
      * @param id PK de la entidad
      * @param dto datos de la entidad
      */
-    @Operation(summary = "Save or Update", description = "Method that saves or updates a Client")
+    @Operation(summary = "Save or Update", description = "Method that saves or updates a Customer")
     @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
-    public void save(@PathVariable(name = "id", required = false) Long id, @RequestBody ClientDto dto) {
+    public void save(@PathVariable(name = "id", required = false) Long id, @RequestBody CustomerDto dto) {
 
-        this.clientService.save(id, dto);
+        this.customerService.save(id, dto);
     }
 
     /**
@@ -58,9 +58,9 @@ public class ClientController {
      *
      * @param id PK de la entidad
      */
-    @Operation(summary = "Delete", description = "Method that deletes a Client")
+    @Operation(summary = "Delete", description = "Method that deletes a Customer")
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") Long id) throws Exception {
-        this.clientService.delete(id);
+        this.customerService.delete(id);
     }
 }

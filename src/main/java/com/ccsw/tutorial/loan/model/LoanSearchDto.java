@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class LoanSearchDto {
 
     private Long gameId;
-    private Long clientId;
+    private Long customerId;
     LocalDate date;
 
     private PageableRequest pageable;
@@ -18,11 +18,11 @@ public class LoanSearchDto {
 
     public void setGameId(Long gameId) { this.gameId = gameId; }
 
-    public Long getClientId() {
-        return clientId;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setClientId(Long clientId) { this.clientId = clientId; }
+    public void setCustomerId(Long clientId) { this.customerId = clientId; }
 
     public PageableRequest getPageable() {
         return pageable;
