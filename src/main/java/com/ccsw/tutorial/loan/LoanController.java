@@ -72,7 +72,7 @@ public class LoanController {
     }
 
     /**
-     * Recupera un listado de autores {@link Loan}
+     * Recupera un listado de préstamos {@link Loan}
      *
      * @return {@link List} de {@link LoanDto}
      */
