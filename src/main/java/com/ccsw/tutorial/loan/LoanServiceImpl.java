@@ -43,10 +43,11 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public Page<Loan> findPage(LoanSearchDto dto) {
 
-        LoanSpecification gameSpec = new LoanSpecification(new SearchCriteria("game.id", ":", dto.getGameId()));
-        LoanSpecification clientSpec = new LoanSpecification(new SearchCriteria("customer.id", ":", dto.getCustomerId()));
+        Specification<Loan> spec = Specification
+                .where(new LoanSpecification(new SearchCriteria("game.id" , ":", dto.getGameId())))
+                .and(new LoanSpecification(new SearchCriteria("customer.id", ":", dto.getCustomerId())))
+                .and(new LoanSpecification(new SearchCriteria("date", ":", dto.getDate())));
 
-        Specification<Loan> spec = Specification.where(gameSpec).and(clientSpec);
 
         Pageable pageable = dto.getPageable().getPageable();
 

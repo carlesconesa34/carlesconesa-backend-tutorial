@@ -21,6 +21,18 @@ public class LoanSpecification implements Specification<Loan> {
 
     @Override
     public Predicate toPredicate(Root<Loan> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+
+        if("date".equals(criteria.getKey()) && criteria.getValue() != null) {
+            LocalDate date = (LocalDate) criteria.getValue();
+
+            return builder.and(
+                    builder.lessThanOrEqualTo(root.get("startDate"), date
+                    ),
+                    builder.greaterThanOrEqualTo(root.get("endDate"), date
+                    )
+            );
+        }
+
         if (criteria.getOperation().equalsIgnoreCase(":") && criteria.getValue() != null) {
             Path<String> path = getPath(root);
             if (path.getJavaType() == String.class) {
@@ -29,6 +41,7 @@ public class LoanSpecification implements Specification<Loan> {
                 return builder.equal(path, criteria.getValue());
             }
         }
+
         return null;
     }
 
