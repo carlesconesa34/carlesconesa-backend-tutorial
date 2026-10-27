@@ -75,6 +75,12 @@ public class LoanServiceImpl implements LoanService {
         long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate());
         LocalDate day = dto.getStartDate();
 
+        if(dto.getStartDate().isBefore(LocalDate.now())) {
+            throw new RuntimeException(
+                    "La fecha de inicio debe ser igual o posterior al día actual."
+            );
+        }
+
         if (dto.getEndDate().isBefore(dto.getStartDate())) {
             throw new IllegalArgumentException("End date cannot be before start date");
         }
