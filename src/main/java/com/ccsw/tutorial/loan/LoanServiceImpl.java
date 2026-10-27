@@ -2,7 +2,9 @@ package com.ccsw.tutorial.loan;
 
 import com.ccsw.tutorial.customer.CustomerRepository;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
+import com.ccsw.tutorial.customer.model.Customer;
 import com.ccsw.tutorial.game.GameRepository;
+import com.ccsw.tutorial.game.model.Game;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import com.ccsw.tutorial.loan.model.LoanSearchDto;
@@ -91,7 +93,7 @@ public class LoanServiceImpl implements LoanService {
             boolean overlap = !dto.getEndDate().isBefore(existing.getStartDate()) && !dto.getStartDate().isAfter(existing.getEndDate());
 
             if (overlap) {
-                throw new RuntimeException("Game already loaned");
+                throw new RuntimeException("El juego ya está prestado durante este periodo");
             }
         }
 
@@ -114,14 +116,17 @@ public class LoanServiceImpl implements LoanService {
             }
 
             if (activeLoans >= 2) {
-                throw new RuntimeException("Customer cannot have more than 2 simultaneous loans");
+                throw new RuntimeException("El cliente ya tiene dos préstamos activos  en una fecha dentro del periodo");
             }
 
             day = day.plusDays(1);
         }
 
-        loan.setCustomer(customerRepository.findById(dto.getCustomer().getId()).orElseThrow());
-        loan.setGame(gameRepository.findById(dto.getGame().getId()).orElseThrow());
+        Customer customer = customerRepository.findById(dto.getCustomer().getId()).orElseThrow(() -> new RuntimeException("No existe el cliente seleccionado."));
+        Game game = gameRepository.findById(dto.getGame().getId()).orElseThrow(() -> new RuntimeException("No existe el juego seleccionado."));
+
+        loan.setCustomer(customer);
+        loan.setGame(game);
 
         loan.setStartDate(dto.getStartDate());
         loan.setEndDate(dto.getEndDate());
