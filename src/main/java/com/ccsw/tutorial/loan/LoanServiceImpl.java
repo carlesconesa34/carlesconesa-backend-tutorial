@@ -72,20 +72,23 @@ public class LoanServiceImpl implements LoanService {
 
         BeanUtils.copyProperties(dto, loan, "id", "game", "customer");
 
-        long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate());
-        LocalDate day = dto.getStartDate();
+        LocalDate startDate = dto.getStartDate();
+        LocalDate endDate = dto.getEndDate();
+        LocalDate today = LocalDate.now();
 
-        if(dto.getStartDate().isBefore(LocalDate.now())) {
+        long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate()) + 1;
+
+        if(startDate.isBefore(today)) {
             throw new RuntimeException(
                     "La fecha de inicio debe ser igual o posterior al día actual."
             );
         }
 
-        if (dto.getEndDate().isBefore(dto.getStartDate())) {
+        if (endDate.isBefore(startDate)) {
             throw new IllegalArgumentException("End date cannot be before start date");
         }
 
-        if (days + 1 > 14) {
+        if (days > 14) {
             throw new IllegalArgumentException("Loan cannot exceed 14 days");
         }
 
@@ -96,7 +99,7 @@ public class LoanServiceImpl implements LoanService {
                 continue;
             }
 
-            boolean overlap = !dto.getEndDate().isBefore(existing.getStartDate()) && !dto.getStartDate().isAfter(existing.getEndDate());
+            boolean overlap = !endDate.isBefore(existing.getStartDate()) && !startDate.isAfter(existing.getEndDate());
 
             if (overlap) {
                 throw new RuntimeException("El juego ya está prestado durante este periodo");
@@ -104,7 +107,7 @@ public class LoanServiceImpl implements LoanService {
         }
 
         List<Loan> customerLoans = loanRepository.findByCustomerId(dto.getCustomer().getId());
-        while (!day.isAfter(dto.getEndDate())) {
+        while (!startDate.isAfter(endDate)) {
 
             int activeLoans = 0;
 
@@ -114,7 +117,7 @@ public class LoanServiceImpl implements LoanService {
                     continue;
                 }
 
-                boolean active = !day.isBefore(existing.getStartDate()) && !day.isAfter(existing.getEndDate());
+                boolean active = !startDate.isBefore(existing.getStartDate()) && !startDate.isAfter(existing.getEndDate());
 
                 if (active) {
                     activeLoans++;
@@ -125,7 +128,7 @@ public class LoanServiceImpl implements LoanService {
                 throw new RuntimeException("El cliente ya tiene dos préstamos activos  en una fecha dentro del periodo");
             }
 
-            day = day.plusDays(1);
+            startDate = startDate.plusDays(1);
         }
 
         Customer customer = customerRepository.findById(dto.getCustomer().getId()).orElseThrow(() -> new RuntimeException("No existe el cliente seleccionado."));
