@@ -64,7 +64,7 @@ public class LoanServiceImpl implements LoanService {
         if (id == null) {
             loan = new Loan();
         } else {
-            loan = this.get(id);
+            loan = loanRepository.findById(id).orElseThrow(() -> new RuntimeException("No existe el préstamo con id" + id));
         }
 
         BeanUtils.copyProperties(dto, loan, "id", "game", "customer");
@@ -73,11 +73,11 @@ public class LoanServiceImpl implements LoanService {
         LocalDate day = dto.getStartDate();
 
         if (dto.getEndDate().isBefore(dto.getStartDate())) {
-            throw new RuntimeException("End date cannot be before start date");
+            throw new IllegalArgumentException("End date cannot be before start date");
         }
 
-        if (days > 14) {
-            throw new RuntimeException("Loan cannot exceed 14 days");
+        if (days + 1 > 14) {
+            throw new IllegalArgumentException("Loan cannot exceed 14 days");
         }
 
         List<Loan> gameLoans = loanRepository.findByGameId(dto.getGame().getId());
