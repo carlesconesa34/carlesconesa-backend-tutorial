@@ -2,7 +2,9 @@ package com.ccsw.tutorial.loan;
 
 import com.ccsw.tutorial.customer.CustomerRepository;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
+import com.ccsw.tutorial.customer.model.Customer;
 import com.ccsw.tutorial.game.GameRepository;
+import com.ccsw.tutorial.game.model.Game;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import com.ccsw.tutorial.loan.model.LoanSearchDto;
@@ -14,9 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+
 
 @Service
 @Transactional
@@ -43,10 +47,11 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public Page<Loan> findPage(LoanSearchDto dto) {
 
-        LoanSpecification gameSpec = new LoanSpecification(new SearchCriteria("game.id", ":", dto.getGameId()));
-        LoanSpecification clientSpec = new LoanSpecification(new SearchCriteria("customer.id", ":", dto.getCustomerId()));
+        Specification<Loan> spec = Specification
+                .where(new LoanSpecification(new SearchCriteria("game.id" , ":", dto.getGameId())))
+                .and(new LoanSpecification(new SearchCriteria("customer.id", ":", dto.getCustomerId())))
+                .and(new LoanSpecification(new SearchCriteria("date", ":", dto.getDate())));
 
-        Specification<Loan> spec = Specification.where(gameSpec).and(clientSpec);
 
         Pageable pageable = dto.getPageable().getPageable();
 
@@ -64,20 +69,34 @@ public class LoanServiceImpl implements LoanService {
         if (id == null) {
             loan = new Loan();
         } else {
-            loan = this.get(id);
+            loan = loanRepository.findById(id).orElseThrow(() -> new RuntimeException("No existe el préstamo con id" + id));
         }
 
         BeanUtils.copyProperties(dto, loan, "id", "game", "customer");
 
-        long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate());
-        LocalDate day = dto.getStartDate();
+        LocalDate startDate = dto.getStartDate();
+        LocalDate endDate = dto.getEndDate();
 
-        if (dto.getEndDate().isBefore(dto.getStartDate())) {
-            throw new RuntimeException("End date cannot be before start date");
+        if(startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Las fechas de inicio y fin son obligatorias.");
         }
 
+        LocalDate today = LocalDate.now();
+
+        if(startDate.isBefore(today)) {
+            throw new RuntimeException(
+                    "La fecha de inicio debe ser igual o posterior al día actual."
+            );
+        }
+
+        if (endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
+
+        long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate()) + 1;
+
         if (days > 14) {
-            throw new RuntimeException("Loan cannot exceed 14 days");
+            throw new IllegalArgumentException("Loan cannot exceed 14 days");
         }
 
         List<Loan> gameLoans = loanRepository.findByGameId(dto.getGame().getId());
@@ -87,15 +106,18 @@ public class LoanServiceImpl implements LoanService {
                 continue;
             }
 
-            boolean overlap = !dto.getEndDate().isBefore(existing.getStartDate()) && !dto.getStartDate().isAfter(existing.getEndDate());
+            boolean overlap = !endDate.isBefore(existing.getStartDate()) && !startDate.isAfter(existing.getEndDate());
 
             if (overlap) {
-                throw new RuntimeException("Game already loaned");
+                throw new RuntimeException("El juego ya está prestado durante este periodo");
             }
         }
 
         List<Loan> customerLoans = loanRepository.findByCustomerId(dto.getCustomer().getId());
-        while (!day.isAfter(dto.getEndDate())) {
+
+        LocalDate day = startDate;
+
+        while (!day.isAfter(endDate)) {
 
             int activeLoans = 0;
 
@@ -113,14 +135,17 @@ public class LoanServiceImpl implements LoanService {
             }
 
             if (activeLoans >= 2) {
-                throw new RuntimeException("Customer cannot have more than 2 simultaneous loans");
+                throw new RuntimeException("El cliente ya tiene dos préstamos activos  en una fecha dentro del periodo");
             }
 
             day = day.plusDays(1);
         }
 
-        loan.setCustomer(customerRepository.findById(dto.getCustomer().getId()).orElseThrow());
-        loan.setGame(gameRepository.findById(dto.getGame().getId()).orElseThrow());
+        Customer customer = customerRepository.findById(dto.getCustomer().getId()).orElseThrow(() -> new RuntimeException("No existe el cliente seleccionado."));
+        Game game = gameRepository.findById(dto.getGame().getId()).orElseThrow(() -> new RuntimeException("No existe el juego seleccionado."));
+
+        loan.setCustomer(customer);
+        loan.setGame(game);
 
         loan.setStartDate(dto.getStartDate());
         loan.setEndDate(dto.getEndDate());

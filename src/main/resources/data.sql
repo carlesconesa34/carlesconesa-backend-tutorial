@@ -23,9 +23,9 @@ INSERT INTO customer(name) VALUES ('CUSTOMER4');
 INSERT INTO customer(name) VALUES ('CUSTOMER5');
 INSERT INTO customer(name) VALUES ('CUSTOMER6');
 
-INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (1, 1, '2026-01-01', '2026-01-05');
-INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (1, 2, '2026-01-06', '2026-01-10');
-INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (2, 3, '2026-01-01', '2026-01-05');
-INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (2, 2, '2026-01-01', '2026-01-05');
-INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (3, 4, '2026-01-01', '2026-01-05');
-INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (4, 5, '2026-01-01', '2026-01-05');
+INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (1, 1, '2026-10-27', '2026-10-31');
+INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (1, 2, '2026-11-01', '2026-11-05');
+INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (2, 3, '2026-10-27', '2026-10-31');
+INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (2, 2, '2026-10-27', '2026-10-31');
+INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (3, 4, '2026-10-27', '2026-10-31');
+INSERT INTO loan(customer_id, game_id, start_date, end_date) VALUES (4, 5, '2026-10-27', '2026-10-31');
