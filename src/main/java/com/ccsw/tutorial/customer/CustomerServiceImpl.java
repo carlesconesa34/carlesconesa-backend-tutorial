@@ -31,20 +31,28 @@ public class CustomerServiceImpl implements CustomerService {
      */
     public void save(Long id, CustomerDto dto) {
 
+        if(dto == null || dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del cliente no puede estar vacío");
+        }
+
+        String customerName = dto.getName().trim();
+
         Customer existingCustomer = this.customerRepository.findCustomerByName(dto.getName());
 
         if (existingCustomer != null && (id == null || !existingCustomer.getId().equals(id))) {
             throw new RuntimeException("El cliente " + dto.getName() + " ya existe.");
         }
+
         Customer customer;
 
         if (id == null) {
             customer = new Customer();
         } else {
-            customer = this.customerRepository.findById(id).orElse(null);
+            customer = this.customerRepository.findById(id).orElseThrow
+                    (() -> new RuntimeException("El cliente con id " + id + " no existe."));
         }
 
-        customer.setName(dto.getName());
+        customer.setName(customerName);
 
         this.customerRepository.save(customer);
     }
